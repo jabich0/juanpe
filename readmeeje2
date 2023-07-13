@@ -1,0 +1,79 @@
+# Librería Online
+
+Este proyecto representa una plataforma de una librería online, donde se pueden gestionar productos, usuarios y compras. Permite realizar acciones como dar de alta y baja productos y usuarios, comprar y devolver productos, listar productos, calcular estadísticas de ventas y generar rankings.
+
+## Requisitos del sistema
+- Java 8 o superior
+
+## Funcionalidades
+
+### Gestión de productos
+- `darDeAltaProducto(Producto producto)`: agrega un producto al inventario.
+- `darDeBajaProducto(Producto producto)`: elimina un producto del inventario.
+- `listarProductos()`: muestra una lista de los productos disponibles en el inventario.
+
+### Gestión de usuarios
+- `darDeAltaUsuario(Usuario usuario)`: registra un usuario en el sistema.
+- `darDeBajaUsuario(Usuario usuario)`: elimina un usuario del sistema.
+
+### Compras
+- `comprarProducto(Usuario usuario, Producto producto)`: realiza una compra de un producto por parte de un usuario.
+- `devolverProducto(Usuario usuario, Producto producto)`: permite la devolución de un producto recientemente comprado.
+
+### Estadísticas de ventas
+- `listarProductosVendidos(int mes, int anio)`: muestra una lista de los productos vendidos en un mes y año específicos.
+- `calcularDineroIngresadoLibros(int mes, int anio)`: calcula el dinero ingresado por las ventas de libros en un mes y año específicos.
+- `calcularDineroIngresadoJuegos(int mes, int anio)`: calcula el dinero ingresado por las ventas de juegos de mesa en un mes y año específicos.
+- `calcularCantidadLibrosVendidos(int mes, int anio)`: calcula la cantidad de libros vendidos en un mes y año específicos.
+- `calcularCantidadJuegosVendidos(int mes, int anio)`: calcula la cantidad de juegos de mesa vendidos en un mes y año específicos.
+- `generarRankingLibros(int mes, int anio)`: genera un ranking de los libros más vendidos en un mes y año específicos.
+- `generarRankingJuegos(int mes, int anio)`: genera un ranking de los juegos de mesa más vendidos en un mes y año específicos.
+- `listarClientesConMasCompras(int mes, int anio)`: muestra una lista de los 5 clientes con más compras en un mes y año específicos.
+
+### Carga y guardado de datos
+- `cargarInventarioDesdeArchivo(String archivo)`: carga los datos del inventario desde un archivo.
+- `guardarInventarioEnArchivo(String archivo)`: guarda los datos del inventario en un archivo.
+- `cargarUsuariosDesdeArchivo(String archivo)`: carga los datos de los usuarios desde un archivo.
+- `guardarUsuariosEnArchivo(String archivo)`: guarda los datos de los usuarios en un archivo.
+
+## Uso
+
+Se proporciona un ejemplo de uso en el método `main` de la clase `LibreriaOnline`. En este ejemplo se realizan diversas acciones como cargar datos desde archivos, realizar compras, mostrar información y guardar datos en archivos.
+
+Recuerda asegurarte de tener los archivos `inventario.txt` y `usuarios.txt` con los datos correspondientes antes de ejecutar el ejemplo.
+
+```java
+public static void main(String[] args) {
+    LibreriaOnline libreria = new LibreriaOnline();
+
+    // Cargar datos desde archivos
+    libreria.cargarInventarioDesdeArchivo("inventario.txt");
+    libreria.cargarUsuariosDesdeArchivo("usuarios.txt");
+
+    // Realizar acciones en la librería
+    Usuario usuario1 = libreria.usuarios.get(0);
+    Usuario usuario2 = libreria.usuarios.get(1);
+    Producto producto1 = libreria.inventario.get(0);
+    Producto producto2 = libreria.inventario.get(1);
+
+    libreria.comprarProducto(usuario1, producto1);
+    libreria.comprarProducto(usuario1, producto2);
+    libreria.comprarProducto(usuario2, producto1);
+
+    // Mostrar información
+    libreria.listarProductos();
+    System.out.println("Productos vendidos:");
+    libreria.listarProductosVendidos(7, 2023);
+
+    double dineroLibros = libreria.calcularDineroIngresadoLibros(7, 2023);
+    System.out.println("Dinero ingresado por ventas de libros: " + dineroLibros + " euros");
+
+    int cantidadLibros = libreria.calcularCantidadLibrosVendidos(7, 2023);
+    System.out.println("Cantidad de libros vendidos: " + cantidadLibros);
+
+    libreria.generarRankingLibros(7, 2023);
+
+    // Guardar datos en archivos
+    libreria.guardarInventarioEnArchivo("inventario_guardado.txt");
+    libreria.guardarUsuariosEnArchivo("usuarios_guardados.txt");
+}
