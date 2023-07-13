@@ -1,0 +1,57 @@
+        +------------------------+
+        |       Usuario          |
+        +------------------------+
+        | - nombre: String       |
+        | - apellidos: String    |
+        | - fechaNacimiento: Date|
+        | - dni: String          |
+        | - tarjetaCredito: String|
+        +------------------------+
+        | + comprarProducto()    |
+        | + devolverProducto()   |
+        +------------------------+
+                ^
+                |
+                |
+        +------------------------+
+        |       Cliente          |
+        +------------------------+
+        | - autorizacionPadre: boolean|
+        +------------------------+
+                ^
+                |
+                |
+        +------------------------+
+        |    ClienteMenorEdad    |
+        +------------------------+
+        | - padre: Cliente       |
+        +------------------------+
+
+        +------------------------+
+        |       Producto         |
+        +------------------------+
+        | - id: String           |
+        | - precio: double       |
+        +------------------------+
+                ^
+                |
+                |
+       +-------------------------+
+       |          Libro          |
+       +-------------------------+
+       | - titulo: String        |
+       | - autor: String         |
+       | - categoria: String     |
+       | - nuevo: boolean        |
+       +-------------------------+
+                ^
+                |
+                |
+      +--------------------------+
+      |       JuegoMesa          |
+      +--------------------------+
+      | - titulo: String         |
+      | - edadRecomendada: int   |
+      | - tematica: String       |
+      +--------------------------+
+
