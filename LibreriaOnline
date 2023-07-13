@@ -1,0 +1,480 @@
+package ExamenExtraordinaria;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+// Clase principal que representa la plataforma de la librería
+public class LibreriaOnline {
+    private List<Producto> inventario;
+    private List<Usuario> usuarios;
+    private List<Compra> compras;
+
+    public LibreriaOnline() {
+        this.inventario = new ArrayList<>();
+        this.usuarios = new ArrayList<>();
+        this.compras = new ArrayList<>();
+    }
+
+    // Método para dar de alta un producto en el inventario
+    public void darDeAltaProducto(Producto producto) {
+        inventario.add(producto);
+    }
+
+    // Método para dar de baja un producto del inventario
+    public void darDeBajaProducto(Producto producto) {
+        inventario.remove(producto);
+    }
+
+    // Método para dar de alta un usuario en el sistema
+    public void darDeAltaUsuario(Usuario usuario) {
+        usuarios.add(usuario);
+    }
+
+    // Método para dar de baja un usuario del sistema
+    public void darDeBajaUsuario(Usuario usuario) {
+        usuarios.remove(usuario);
+    }
+
+    // Método para realizar una compra de un producto por parte de un usuario
+    public void comprarProducto(Usuario usuario, Producto producto) {
+        Compra compra = new Compra(usuario, producto);
+        compras.add(compra);
+    }
+
+    // Método para realizar la devolución de un producto recientemente comprado
+    public void devolverProducto(Usuario usuario, Producto producto) {
+        Compra compra = new Compra(usuario, producto);
+        if (compras.contains(compra) && compra.esReciente()) {
+            compras.remove(compra);
+        } else {
+            System.out.println("No se puede realizar la devolución");
+        }
+    }
+
+    // Método para listar los productos disponibles en el inventario
+    public void listarProductos() {
+        for (Producto producto : inventario) {
+            System.out.println(producto);
+        }
+    }
+
+    // Método para listar los productos vendidos (libros y juegos de mesa) en un mes específico
+    public void listarProductosVendidos(int mes, int anio) {
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Producto producto = compra.getProducto();
+                System.out.println(producto);
+            }
+        }
+    }
+
+    // Método para calcular el dinero ingresado por las ventas de libros en un mes y año específicos
+    public double calcularDineroIngresadoLibros(int mes, int anio) {
+        double dineroIngresado = 0;
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Producto producto = compra.getProducto();
+                if (producto instanceof Libro) {
+                    dineroIngresado += producto.getPrecio();
+                }
+            }
+        }
+        return dineroIngresado;
+    }
+
+    // Método para calcular el dinero ingresado por las ventas de juegos de mesa en un mes y año específicos
+    public double calcularDineroIngresadoJuegos(int mes, int anio) {
+        double dineroIngresado = 0;
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Producto producto = compra.getProducto();
+                if (producto instanceof JuegoMesa) {
+                    dineroIngresado += producto.getPrecio();
+                }
+            }
+        }
+        return dineroIngresado;
+    }
+
+    // Método para calcular la cantidad de libros vendidos en un mes específico
+    public int calcularCantidadLibrosVendidos(int mes, int anio) {
+        int cantidadLibros = 0;
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Producto producto = compra.getProducto();
+                if (producto instanceof Libro) {
+                    cantidadLibros++;
+                }
+            }
+        }
+        return cantidadLibros;
+    }
+
+    // Método para calcular la cantidad de juegos de mesa vendidos en un mes específico
+    public int calcularCantidadJuegosVendidos(int mes, int anio) {
+        int cantidadJuegos = 0;
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Producto producto = compra.getProducto();
+                if (producto instanceof JuegoMesa) {
+                    cantidadJuegos++;
+                }
+            }
+        }
+        return cantidadJuegos;
+    }
+
+    // Método para generar un ranking de libros vendidos en un mes específico
+    public void generarRankingLibros(int mes, int anio) {
+        Map<String, Integer> rankingLibros = new HashMap<>();
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Producto producto = compra.getProducto();
+                if (producto instanceof Libro) {
+                    Libro libro = (Libro) producto;
+                    rankingLibros.put(libro.getTitulo(), rankingLibros.getOrDefault(libro.getTitulo(), 0) + 1);
+                }
+            }
+        }
+        rankingLibros.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEach(entry -> System.out.println(entry.getKey() + " - " + entry.getValue() + " ventas"));
+    }
+
+    // Método para generar un ranking de juegos de mesa vendidos en un mes específico
+    public void generarRankingJuegos(int mes, int anio) {
+        Map<String, Integer> rankingJuegos = new HashMap<>();
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Producto producto = compra.getProducto();
+                if (producto instanceof JuegoMesa) {
+                    JuegoMesa juego = (JuegoMesa) producto;
+                    rankingJuegos.put(juego.getTitulo(), rankingJuegos.getOrDefault(juego.getTitulo(), 0) + 1);
+                }
+            }
+        }
+        rankingJuegos.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEach(entry -> System.out.println(entry.getKey() + " - " + entry.getValue() + " ventas"));
+    }
+
+    // Método para listar los 5 clientes con más compras en un mes específico
+    public void listarClientesConMasCompras(int mes, int anio) {
+        Map<Usuario, Integer> comprasPorCliente = new HashMap<>();
+        for (Compra compra : compras) {
+            if (compra.getFecha().getMonthValue() == mes && compra.getFecha().getYear() == anio) {
+                Usuario usuario = compra.getUsuario();
+                comprasPorCliente.put(usuario, comprasPorCliente.getOrDefault(usuario, 0) + 1);
+            }
+        }
+        comprasPorCliente.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(5)
+                .forEach(entry -> System.out.println(entry.getKey().getNombreCompleto() + " - " + entry.getValue() + " compras"));
+    }
+
+    // Método para cargar los datos del inventario desde un archivo
+    public void cargarInventarioDesdeArchivo(String archivo) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    String tipo = parts[0].trim();
+                    String titulo = parts[1].trim();
+                    double precio = Double.parseDouble(parts[2].trim());
+                    int edadRecomendada = Integer.parseInt(parts[3].trim());
+                    String tematica = parts[4].trim();
+
+                    if (tipo.equalsIgnoreCase("libro")) {
+                        String autor = parts[5].trim();
+                        String identificador = parts[6].trim();
+                        String categoria = parts[7].trim();
+                        boolean nuevo = Boolean.parseBoolean(parts[8].trim());
+                        Libro libro = new Libro(titulo, autor, identificador, precio, categoria, nuevo);
+                        darDeAltaProducto(libro);
+                    } else if (tipo.equalsIgnoreCase("juego")) {
+                        JuegoMesa juego = new JuegoMesa(titulo, precio, edadRecomendada, tematica);
+                        darDeAltaProducto(juego);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para guardar los datos del inventario en un archivo
+    public void guardarInventarioEnArchivo(String archivo) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
+            for (Producto producto : inventario) {
+                if (producto instanceof Libro) {
+                    Libro libro = (Libro) producto;
+                    writer.write("Libro, " + libro.getTitulo() + ", " + libro.getPrecio() + ", "
+                            + libro.getEdadRecomendada() + ", " + libro.getTematica() + ", " + libro.getAutor() + ", "
+                            + libro.getIdentificador() + ", " + libro.getCategoria() + ", " + libro.esNuevo());
+                } else if (producto instanceof JuegoMesa) {
+                    JuegoMesa juego = (JuegoMesa) producto;
+                    writer.write("Juego, " + juego.getTitulo() + ", " + juego.getPrecio() + ", "
+                            + juego.getEdadRecomendada() + ", " + juego.getTematica());
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para cargar los datos de los usuarios desde un archivo
+    public void cargarUsuariosDesdeArchivo(String archivo) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6) {
+                    String nombre = parts[0].trim();
+                    String apellido1 = parts[1].trim();
+                    String apellido2 = parts[2].trim();
+                    LocalDate fechaNacimiento = LocalDate.parse(parts[3].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    String dni = parts[4].trim();
+                    String tarjetaCredito = parts[5].trim();
+
+                    Usuario usuario = new Usuario(nombre, apellido1, apellido2, fechaNacimiento, dni, tarjetaCredito);
+                    darDeAltaUsuario(usuario);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para guardar los datos de los usuarios en un archivo
+    public void guardarUsuariosEnArchivo(String archivo) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
+            for (Usuario usuario : usuarios) {
+                writer.write(usuario.getNombre() + ", " + usuario.getApellido1() + ", " + usuario.getApellido2()
+                        + ", " + usuario.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ", "
+                        + usuario.getDni() + ", " + usuario.getTarjetaCredito());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Clase Producto (superclase para libros y juegos de mesa)
+    abstract static class Producto {
+        private String titulo;
+        private double precio;
+
+        public Producto(String titulo, double precio) {
+            this.titulo = titulo;
+            this.precio = precio;
+        }
+
+        public String getTitulo() {
+            return titulo;
+        }
+
+        public double getPrecio() {
+            return precio;
+        }
+    }
+
+    // Clase Libro (subclase de Producto)
+    static class Libro extends Producto {
+        private String autor;
+        private String identificador;
+        private String categoria;
+        private boolean nuevo;
+
+        public Libro(String titulo, String autor, String identificador, double precio, String categoria, boolean nuevo) {
+            super(titulo, precio);
+            this.autor = autor;
+            this.identificador = identificador;
+            this.categoria = categoria;
+            this.nuevo = nuevo;
+        }
+
+        public String getEdadRecomendada() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String getTematica() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String getAutor() {
+            return autor;
+        }
+
+        public String getIdentificador() {
+            return identificador;
+        }
+
+        public String getCategoria() {
+            return categoria;
+        }
+
+        public boolean esNuevo() {
+            return nuevo;
+        }
+
+        @Override
+        public String toString() {
+            return "Libro: " + getTitulo() + ", Autor: " + autor + ", Identificador: " + identificador + ", Precio: "
+                    + getPrecio() + " euros";
+        }
+    }
+
+    // Clase JuegoMesa (subclase de Producto)
+    static class JuegoMesa extends Producto {
+        private int edadRecomendada;
+        private String tematica;
+
+        public JuegoMesa(String titulo, double precio, int edadRecomendada, String tematica) {
+            super(titulo, precio);
+            this.edadRecomendada = edadRecomendada;
+            this.tematica = tematica;
+        }
+
+        public int getEdadRecomendada() {
+            return edadRecomendada;
+        }
+
+        public String getTematica() {
+            return tematica;
+        }
+
+        @Override
+        public String toString() {
+            return "Juego de Mesa: " + getTitulo() + ", Edad Recomendada: " + edadRecomendada + ", Temática: " + tematica
+                    + ", Precio: " + getPrecio() + " euros";
+        }
+    }
+
+    // Clase Usuario
+    static class Usuario {
+        private String nombre;
+        private String apellido1;
+        private String apellido2;
+        private LocalDate fechaNacimiento;
+        private String dni;
+        private String tarjetaCredito;
+
+        public Usuario(String nombre, String apellido1, String apellido2, LocalDate fechaNacimiento, String dni,
+                String tarjetaCredito) {
+            this.nombre = nombre;
+            this.apellido1 = apellido1;
+            this.apellido2 = apellido2;
+            this.fechaNacimiento = fechaNacimiento;
+            this.dni = dni;
+            this.tarjetaCredito = tarjetaCredito;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public String getApellido1() {
+            return apellido1;
+        }
+
+        public String getApellido2() {
+            return apellido2;
+        }
+
+        public LocalDate getFechaNacimiento() {
+            return fechaNacimiento;
+        }
+
+        public String getDni() {
+            return dni;
+        }
+
+        public String getTarjetaCredito() {
+            return tarjetaCredito;
+        }
+
+        public String getNombreCompleto() {
+            return nombre + " " + apellido1 + " " + apellido2;
+        }
+    }
+
+    // Clase Compra
+    static class Compra {
+        private Usuario usuario;
+        private Producto producto;
+        private LocalDate fecha;
+
+        public Compra(Usuario usuario, Producto producto) {
+            this.usuario = usuario;
+            this.producto = producto;
+            this.fecha = LocalDate.now();
+        }
+
+        public Usuario getUsuario() {
+            return usuario;
+        }
+
+        public Producto getProducto() {
+            return producto;
+        }
+
+        public LocalDate getFecha() {
+            return fecha;
+        }
+
+        public boolean esReciente() {
+            return fecha.isAfter(LocalDate.now().minusWeeks(2));
+        }
+    }
+
+    // Ejemplo de uso
+    public static void main(String[] args) {
+        LibreriaOnline libreria = new LibreriaOnline();
+
+        // Cargar datos desde archivos
+        libreria.cargarInventarioDesdeArchivo("inventario.txt");
+        libreria.cargarUsuariosDesdeArchivo("usuarios.txt");
+
+        // Realizar acciones en la librería
+        Usuario usuario1 = libreria.usuarios.get(0);
+        Usuario usuario2 = libreria.usuarios.get(1);
+        Producto producto1 = libreria.inventario.get(0);
+        Producto producto2 = libreria.inventario.get(1);
+
+        libreria.comprarProducto(usuario1, producto1);
+        libreria.comprarProducto(usuario1, producto2);
+        libreria.comprarProducto(usuario2, producto1);
+
+        // Mostrar información
+        libreria.listarProductos();
+        System.out.println("Productos vendidos:");
+        libreria.listarProductosVendidos(7, 2023);
+
+        double dineroLibros = libreria.calcularDineroIngresadoLibros(7, 2023);
+        System.out.println("Dinero ingresado por ventas de libros: " + dineroLibros + " euros");
+
+        int cantidadLibros = libreria.calcularCantidadLibrosVendidos(7, 2023);
+        System.out.println("Cantidad de libros vendidos: " + cantidadLibros);
+
+        libreria.generarRankingLibros(7, 2023);
+
+        // Guardar datos en archivos
+        libreria.guardarInventarioEnArchivo("inventario_guardado.txt");
+        libreria.guardarUsuariosEnArchivo("usuarios_guardados.txt");
+    }
+}
