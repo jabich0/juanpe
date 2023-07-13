@@ -1,0 +1,27 @@
+
+Matrix Determinant
+Este programa en Java calcula el determinante de una matriz cuadrada a partir de un archivo de entrada. El determinante es una medida numérica de ciertas propiedades de la matriz.
+
+Requisitos
+Java Development Kit (JDK) 8 o superior.
+Archivo de entrada con la matriz cuadrada en formato de texto.
+Uso
+Asegúrate de tener instalado el JDK en tu sistema.
+Prepara un archivo de texto con la matriz cuadrada. Cada fila de la matriz debe estar en una línea separada, y los elementos de cada fila deben estar separados por espacios.
+Ejecuta el programa proporcionando la ruta del archivo de la matriz como argumento de línea de comandos.
+bash
+
+java ExamenExtraordinaria.MatrixDeterminant 
+Asegúrate de reemplazar <ruta-del-archivo> con la ruta real de tu archivo de matriz.
+Funcionamiento
+El programa consta de varias clases y métodos para llevar a cabo el cálculo del determinante de la matriz. Aquí se describe brevemente el flujo de ejecución:
+
+El programa comienza en el método main, que es el punto de entrada del programa.
+El método readMatrixFromFile se encarga de leer la matriz desde el archivo especificado. Comprueba que el archivo exista y lee las dimensiones de la matriz. Luego crea la matriz y lee los elementos del archivo.
+Se verifica si la matriz es cuadrada mediante el método isSquareMatrix. Si no es cuadrada, se lanza una excepción.
+Si la matriz es cuadrada, se calcula su determinante utilizando el método calculateDeterminant. Para matrices de tamaño 1x1 o 2x2, se aplica una fórmula específica. Para matrices de tamaño mayor, se utiliza recursión y cofactores para calcular el determinante.
+Finalmente, se muestra el determinante calculado en la salida estándar.
+Consideraciones
+El programa asume que el archivo de entrada contiene una matriz válida en el formato especificado. Si el archivo no cumple con el formato esperado, se lanzarán excepciones.
+El programa está diseñado para trabajar con matrices de enteros. Si el archivo contiene elementos no numéricos, se lanzará una excepción.
+El programa utiliza el tipo de datos int para representar los elementos de la matriz.
