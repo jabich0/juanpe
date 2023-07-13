@@ -1,0 +1,29 @@
+/**
+ * 
+ */
+package ExamenExtraordinaria;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * @author fjavi
+ *
+ */
+class MatrixDeterminantTest {
+
+	/**
+	 * Test method for {@link ExamenExtraordinaria.MatrixDeterminant#main(java.lang.String[])}.
+	 */
+	@Test
+	void testMain() {
+		fail("Not yet implemented");
+	}
+
+	private void fail(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
